@@ -1,9 +1,35 @@
 const express = require('express');
 const cors = require('cors');
-const PORT = process.env.PORT || 8000;
-const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const md5 = require('md5');
+const cloudinary = require('cloudinary').v2;
+const PORT = process.env.PORT || 8000;
+const { MONGODBURI, CLOUDINARY_URL } = require('./keys.js');
+const ImageDataUri = require('image-data-uri');
 const app = express();
+cloudinary.config(CLOUDINARY_URL);
+mongoose.connect(MONGODBURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+const objectSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    url: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    hash: {
+        type: String,
+        required: true,
+        unique: true
+    }
+});
+mongoose.model('ImageObj', objectSchema);
+
 app.use(express.json());
 app.use(cors());
 
@@ -11,23 +37,23 @@ app.listen(PORT, () => {
     console.log('Server started');
 });
 
-app.get('/', (req, res) => {
-    res.send('GET');
-});
-
-app.post('/', (req, res) => {
-    console.log(req.body);
-    res.status(200).send('Image Recieved');
-});
 
 app.post('/create', (req, res) => {
-    console.log(req.body);
-    const { name } = req.body;
-    res.status(200).send(`http://localhost:8000/${md5(name).slice(0, 6)}`);
+    const { name, dataUri } = req.body;
+    // ImageDataUri.
+    cloudinary.uploader.upload("my_image.jpg", function (error, result) {
+        if (error) {
+            console.log(error);
+            res.status(500).send(error);
+        } else {
+
+            res.status(200).send(result);
+        }
+    });
+
 });
 
-app.get('/find/:string/', (req, res) => {
-    res.send(`Found something at ${req.path}`);
-})
-// http://localhost:8000/
-// npm i --save express cors nodemon 
+var i = 0;
+app.get('/', (req, res) => {
+    res.send(`${i++}`);
+});
