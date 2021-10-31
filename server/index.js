@@ -5,15 +5,14 @@ const fs = require('fs');
 const md5 = require('md5');
 const cloudinary = require('cloudinary');
 const PORT = process.env.PORT || 8000;
-const { MONGODBURI, CLOUDINARY_URL } = require('./keys.js');
 const ImageDataUri = require('image-data-uri');
 const app = express();
 cloudinary.config({
-    cloud_name: 'dccyvmp29',
-    api_key: '238846339845589',
-    api_secret: 'uCN4kGZYhf4hQE4sMN76W7CZpOc'
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
 });
-mongoose.connect(MONGODBURI, {
+mongoose.connect(process.env.MONGODBURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
