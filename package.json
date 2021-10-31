@@ -5,16 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js",
+    "client": "cd client ; npm start"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.19.0",
     "cloudinary": "^1.27.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "image-data-uri": "^2.0.1",
     "md5": "^2.3.0",
     "mongoose": "^6.0.12"
   },
